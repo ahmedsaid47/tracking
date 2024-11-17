@@ -18,7 +18,6 @@ class VehiclesImport implements ToModel, WithHeadingRow
     {
         Log::info('Excel dosyasından okunan satır:', $row);
 
-        // İlgili kurumu bul veya oluştur, hiyerarşik yapıyı desteklemek için üst kurumu da kontrol et
         $institution = Institution::firstOrCreate(
             ['name' => $row['institution']],
             ['name' => $row['institution'], 'parent_id' => $row['parent_institution_id'] ?? null]
@@ -32,7 +31,6 @@ class VehiclesImport implements ToModel, WithHeadingRow
             Log::info('Var olan kurum bulundu.', ['institution' => $row['institution']]);
         }
 
-        // Yeni araç kaydını oluştur ve kuruma bağla
         Log::info('Yeni araç kaydediliyor.', [
             'license_plate' => $row['license_plate'],
             'brand' => $row['brand'],

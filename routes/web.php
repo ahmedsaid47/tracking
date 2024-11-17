@@ -28,11 +28,21 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource('vehicles', VehicleController::class);
+    Route::resource('vehicles', VehicleController::class)->except(['show']);
     Route::get('/vehicles/create', [VehicleController::class, 'create'])->name('vehicles.create'); // Yeni araç ekleme formu
     Route::post('/vehicles', [VehicleController::class, 'store'])->name('vehicles.store'); // Aracı kaydetme
 
+    Route::delete('/vehicles/{id}', [VehicleController::class, 'destroy'])->name('vehicles.destroy');
+
+
     Route::get('/upload', [ExcelUploadController::class, 'create'])->name('upload');
     Route::post('/upload', [ExcelUploadController::class, 'store'])->name('upload.store');
+
+    Route::post('/upload/geocode', [ExcelUploadController::class, 'processGeocoding'])->name('upload.geocode');
+
+    Route::post('/upload/chatgpt', [ExcelUploadController::class, 'processChatGPT'])->name('upload.chatgpt');
+
+
 
 
 

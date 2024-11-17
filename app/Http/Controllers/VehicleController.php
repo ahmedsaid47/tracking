@@ -32,7 +32,6 @@ class VehicleController extends Controller
      */
     public function create()
     {
-        // Tüm kurumları alırken gereksiz alanları yüklemiyoruz
         $institutions = Institution::select('id', 'name')->get();
 
         return Inertia::render('Vehicles/AddVehicle', [
@@ -48,7 +47,6 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
-        // Doğrulama kuralları
         $request->validate([
             'license_plate' => 'required|string|max:255',
             'institution_id' => 'required|exists:institutions,id',
@@ -59,15 +57,31 @@ class VehicleController extends Controller
         ]);
 
         try {
-            // Araç kaydını oluştur
             Vehicle::create($request->only(
                 'license_plate', 'institution_id', 'brand', 'model', 'start_address', 'end_address'
             ));
 
             return redirect()->route('vehicles.index')->with('success', 'Vehicle added successfully');
         } catch (\Exception $e) {
-            // Hata durumunda ayrıntılı hata mesajıyla geri dön
             return back()->withErrors(['error' => 'Error adding vehicle: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Remove the specified vehicle from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy($id)
+    {
+        try {
+            $vehicle = Vehicle::findOrFail($id);
+            $vehicle->delete();
+
+            return redirect()->route('vehicles.index')->with('success', 'Vehicle deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('vehicles.index')->with('success', 'Vehicle deleted successfully');
         }
     }
 }

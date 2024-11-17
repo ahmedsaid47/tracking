@@ -17,7 +17,6 @@ class Geocode extends Model
         'end_longitude',
     ];
 
-    // Vehicle ilişkisi
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
